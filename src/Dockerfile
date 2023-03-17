@@ -5,7 +5,7 @@ COPY ./app /app
 
 WORKDIR /app
 
-RUN composer install --no-interaction --ignore-platform-reqs
+RUN composer install --no-ansi --no-dev --no-interaction --no-plugins --no-progress --no-scripts --optimize-autoloader
 
 # end build, final container
 FROM ubuntu:22.04 AS laravel
@@ -17,6 +17,10 @@ ENV PHP_VERSION=${PHP_VERSION}
 WORKDIR /app
 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+RUN apt-get update && apt-get install -y software-properties-common
+
+RUN add-apt-repository ppa:ondrej/php
 RUN apt-get update && apt-get upgrade -y
 
 RUN apt-get install -y  \
